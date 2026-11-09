@@ -1,0 +1,9 @@
+/.tools/
+/.cache/
+/.tmp/
+/bin/
+/dist/
+/coverage.out
+/local/
+*.test
+__pycache__/

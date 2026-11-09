@@ -1,0 +1,35 @@
+{
+  "listen": "127.0.0.1:9443",
+  "tls": {
+    "cert_file": "/etc/anbridge/tls/fullchain.pem",
+    "key_file": "/etc/anbridge/tls/privkey.pem"
+  },
+  "api_state_dir": "/var/lib/anbridge-api",
+  "deploy_state_dir": "/var/lib/anbridge",
+  "socket_path": "/run/anbridge-deploy/helper.sock",
+  "socket_group": "anbridge",
+  "probe_timeout_seconds": 10,
+  "min_validity_hours": 24,
+  "max_staged_per_site": 16,
+  "staged_ttl_hours": 48,
+  "nginx": {
+    "binary": "/usr/sbin/nginx",
+    "config": "/etc/nginx/nginx.conf",
+    "prefix": "/usr/share/nginx",
+    "command_timeout_seconds": 10
+  },
+  "sites": [
+    {
+      "id": "zabbix",
+      "token_file": "/etc/anbridge/tokens/zabbix",
+      "domains": ["zabbix.example.com"],
+      "include_file": "/etc/nginx/anbridge/zabbix.conf",
+      "probes": [
+        {
+          "address": "127.0.0.1:443",
+          "server_name": "zabbix.example.com"
+        }
+      ]
+    }
+  ]
+}

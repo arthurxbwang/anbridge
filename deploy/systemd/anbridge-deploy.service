@@ -1,0 +1,41 @@
+[Unit]
+Description=ANBridge local certificate deployment helper
+Requires=nginx.service
+PartOf=nginx.service
+After=nginx.service
+
+[Service]
+Type=simple
+User=root
+Group=anbridge
+ExecStart=/usr/local/bin/anbridge deployd -config /etc/anbridge/config.json
+Restart=on-failure
+RestartSec=5s
+TimeoutStopSec=15min
+UMask=0077
+StateDirectory=anbridge
+StateDirectoryMode=0700
+RuntimeDirectory=anbridge-deploy
+RuntimeDirectoryMode=0750
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+CapabilityBoundingSet=CAP_CHOWN CAP_DAC_OVERRIDE CAP_KILL
+LockPersonality=true
+# These are conventional distro paths. Review them for the actual nginx config.
+# The leading '-' permits a directory that is not used on this distribution.
+ReadWritePaths=/etc/nginx/anbridge
+ReadWritePaths=-/var/log/nginx -/var/lib/nginx -/var/cache/nginx
+# nginx -t opens its existing PID file for read/write even in test mode.
+# PartOf restarts this helper with nginx so a replaced PID inode is remounted.
+ReadWritePaths=-/run/nginx.pid
+LimitNOFILE=4096
+
+[Install]
+WantedBy=multi-user.target
